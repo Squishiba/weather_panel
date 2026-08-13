@@ -74,6 +74,19 @@
             }
         },
         {
+            "label": "sampling proxy",
+            "type": "shell",
+            "command": "node",
+            "args": ["${userHome}/.config/llm-proxy/proxy.mjs"],
+            "isBackground": true,
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "focus": false
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "little-coder",
             "type": "shell",
             "command": "little-coder",
