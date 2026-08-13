@@ -1,0 +1,39 @@
+# ---- credentials (NEVER commit) ----
+inc/secrets.h
+
+# ---- vendored SDKs ----
+pico-sdk/
+pimoroni-pico/
+
+# ---- CMake / Ninja in-source build artifacts ----
+build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CPM_modules/
+_deps/
+Testing/
+.cmake/
+.cache/
+build.ninja
+build.ninja.tmp*
+.ninja_deps
+.ninja_log
+compile_commands.json
+compile_commands.json.tmp*
+
+# ---- generated sources ----
+generated/
+hub75.pio.h
+
+# ---- build outputs ----
+*.a
+*.elf
+*.elf.map
+*.bin
+*.dis
+*.uf2
+*.hex
+
+# ---- editor ----
+.idea/

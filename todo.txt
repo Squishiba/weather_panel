@@ -1,0 +1,6 @@
+TODO
+
+add wind effects (swirling?) to snow.
+Maybe add wind effects to rain as well? Might be more complicated due to how the particles are drawn
+for rain but....
+

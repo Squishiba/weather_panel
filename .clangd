@@ -1,0 +1,12 @@
+# clangd reads build/compile_commands.json, which is produced by
+# arm-none-eabi-gcc. Without help, clang parses those commands for its default
+# x86_64-pc-windows-msvc target, so every ARM codegen flag (-mcpu, -mfloat-abi,
+# -mthumb, ...) is a hard driver error -> the preamble fails -> "invalid AST"
+# for every file. Fix: give clang the matching cross target, and drop the
+# GCC-only flags it doesn't implement at all.
+#
+# Pairs with --query-driver (see .vscode/settings.json), which lets clangd ask
+# the real arm-none-eabi-g++ for its system include paths (newlib, libstdc++).
+CompileFlags:
+  Add: [--target=arm-none-eabi]
+  Remove: [-mfp16-format*, -march*]
