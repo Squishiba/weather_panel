@@ -1,0 +1,152 @@
+DOXYFILE_ENCODING      = UTF-8
+PROJECT_NAME            = "Weather"
+PROJECT_BRIEF           = "Particle-based weather display firmware for the Raspberry Pi Pico 2 W (RP2350) driving an Interstate 75 HUB75 panel"
+OUTPUT_DIRECTORY        = docs
+CREATE_SUBDIRS          = NO
+OUTPUT_LANGUAGE         = English
+BRIEF_MEMBER_DESC       = YES
+REPEAT_BRIEF            = YES
+ALWAYS_DETAILED_SEC     = NO
+FULL_PATH_NAMES         = YES
+STRIP_FROM_PATH         = .
+STRIP_FROM_INC_PATH     = inc
+SHORT_NAMES             = NO
+JAVADOC_AUTOBRIEF       = YES
+QT_AUTOBRIEF            = NO
+MULTILINE_CPP_IS_BRIEF  = NO
+INHERIT_DOCS            = YES
+TAB_SIZE                = 4
+MARKDOWN_SUPPORT        = YES
+AUTOLINK_SUPPORT        = YES
+BUILTIN_STL_SUPPORT     = YES
+CPP_CLI_SUPPORT         = NO
+SIP_SUPPORT             = NO
+DISTRIBUTE_GROUP_DOC    = NO
+GROUP_NESTED_COMPOUNDS  = NO
+SUBGROUPING              = YES
+INLINE_GROUPED_CLASSES  = NO
+TYPEDEF_HIDES_STRUCT    = NO
+
+# --- Templates / CRTP base classes -----------------------------------------
+# ParticleEffectBase and similar bases in inc/effects and inc/particles are
+# CRTP: TEMPLATE_RELATIONS + class diagrams make the base<->derived binding
+# visible; without it CRTP reads as an unrelated template instantiation.
+TEMPLATE_RELATIONS      = YES
+CLASS_DIAGRAMS          = YES
+HIDE_UNDOC_RELATIONS    = NO
+COLLABORATION_GRAPH     = NO
+GRAPHICAL_HIERARCHY     = NO
+HAVE_DOT                = NO
+
+# --- Extraction --------------------------------------------------------------
+EXTRACT_ALL             = NO
+EXTRACT_PRIVATE         = YES
+EXTRACT_PRIV_VIRTUAL    = YES
+EXTRACT_PACKAGE         = YES
+EXTRACT_STATIC          = YES
+EXTRACT_LOCAL_CLASSES   = YES
+EXTRACT_ANON_NSPACES    = YES
+RESOLVE_UNNAMED_PARAMS  = YES
+HIDE_UNDOC_MEMBERS      = NO
+HIDE_UNDOC_CLASSES      = NO
+HIDE_IN_BODY_DOCS       = NO
+INTERNAL_DOCS           = YES
+CASE_SENSE_NAMES        = SYSTEM
+HIDE_SCOPE_NAMES        = NO
+HIDE_COMPOUND_REFERENCE = NO
+SHOW_INCLUDE_FILES      = YES
+SHOW_GROUPED_MEMB_INC   = NO
+FORCE_LOCAL_INCLUDES    = NO
+INLINE_INFO             = YES
+SORT_MEMBER_DOCS        = YES
+SORT_BRIEF_DOCS         = NO
+SORT_MEMBERS_CTORS_1ST  = YES
+SORT_GROUP_NAMES        = NO
+SORT_BY_SCOPE_NAME      = NO
+GENERATE_TODOLIST       = YES
+GENERATE_TESTLIST       = YES
+GENERATE_BUGLIST        = YES
+GENERATE_DEPRECATEDLIST = YES
+MAX_INITIALIZER_LINES   = 30
+SHOW_USED_FILES         = YES
+SHOW_FILES              = YES
+SHOW_NAMESPACES         = YES
+
+# --- Warnings: kept loud so doc coverage is measurable ----------------------
+QUIET                   = NO
+WARNINGS                = YES
+WARN_IF_UNDOCUMENTED    = YES
+WARN_IF_DOC_ERROR       = YES
+WARN_IF_INCOMPLETE_DOC  = YES
+WARN_NO_PARAMDOC        = YES
+WARN_AS_ERROR           = NO
+WARN_FORMAT             = "$file:$line: $text"
+
+# --- Input -------------------------------------------------------------------
+INPUT                   = inc src
+INPUT_ENCODING          = UTF-8
+FILE_PATTERNS           = *.h *.hpp *.c *.cpp *.inl
+RECURSIVE               = YES
+EXCLUDE_SYMLINKS        = NO
+# Vendored third-party code and the gitignored secrets header are not
+# first-party and are not meant to carry our doc coverage expectations.
+EXCLUDE                 = inc/secrets.h
+EXCLUDE_PATTERNS        = */inc/third_party/* \
+                           */inc/fast_noise/* \
+                           */inc/json_lib_inc/* \
+                           */inc/perlin_noise/*
+EXAMPLE_PATH            =
+IMAGE_PATH              =
+INPUT_FILTER            =
+FILTER_PATTERNS         =
+FILTER_SOURCE_FILES     = NO
+
+# --- Preprocessing -------------------------------------------------------------
+ENABLE_PREPROCESSING    = YES
+MACRO_EXPANSION         = NO
+EXPAND_ONLY_PREDEF      = NO
+SEARCH_INCLUDES         = YES
+INCLUDE_PATH            =
+INCLUDE_FILE_PATTERNS   =
+PREDEFINED              =
+SKIP_FUNCTION_MACROS    = YES
+
+# --- Source browsing -----------------------------------------------------------
+SOURCE_BROWSER          = YES
+INLINE_SOURCES          = NO
+STRIP_CODE_COMMENTS     = YES
+REFERENCED_BY_RELATION  = YES
+REFERENCES_RELATION     = YES
+REFERENCES_LINK_SOURCE  = YES
+SOURCE_TOOLTIPS         = YES
+USE_HTAGS                = NO
+VERBATIM_HEADERS        = YES
+
+# --- Alphabetical index --------------------------------------------------------
+ALPHABETICAL_INDEX      = YES
+
+# --- HTML output -----------------------------------------------------------
+GENERATE_HTML           = YES
+HTML_OUTPUT             = html
+HTML_FILE_EXTENSION     = .html
+HTML_COLORSTYLE         = AUTO_LIGHT
+GENERATE_TREEVIEW       = YES
+DISABLE_INDEX           = NO
+FULL_SIDEBAR            = NO
+SEARCHENGINE            = YES
+
+# --- Other output formats: off, this is a firmware project, not a paper ----
+GENERATE_LATEX          = NO
+GENERATE_RTF            = NO
+GENERATE_MAN            = NO
+GENERATE_XML            = NO
+GENERATE_DOCBOOK        = NO
+
+# --- Dot / graphs: not verified available on this machine ------------------
+CLASS_GRAPH             = YES
+INCLUDE_GRAPH           = NO
+INCLUDED_BY_GRAPH       = NO
+CALL_GRAPH              = NO
+CALLER_GRAPH            = NO
+DOT_IMAGE_FORMAT        = svg
+INTERACTIVE_SVG         = NO
