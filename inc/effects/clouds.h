@@ -22,10 +22,7 @@ namespace weather
         float cloud_cover_;
 
     public:
-        CloudsEffect(DisplaySegProperties &seg_properties, float cloud_cover)
-            : seg_properties_(seg_properties), cloud_cover_(cloud_cover)
-        {
-        }
+        CloudsEffect(DisplaySegProperties &seg_properties, float cloud_cover) : seg_properties_(seg_properties), cloud_cover_(cloud_cover) {}
 
         void update() override
         {

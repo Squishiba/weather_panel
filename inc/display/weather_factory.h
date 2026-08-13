@@ -37,14 +37,8 @@ public:
      * @param cloud_cover Cloud cover percentage (0-100)
      * @return Vector of unique pointers to weather effects
      */
-    static std::vector<std::unique_ptr<IWeatherEffect>> create_effects(
-        int weather_code,
-        const std::string &weather_description,
-        DisplaySegProperties &seg_properties,
-        const std::string &precip_type,
-        float snow_accumulation,
-        float ice_accumulation,
-        int cloud_cover)
+    static std::vector<std::unique_ptr<IWeatherEffect>> create_effects(int weather_code, const std::string &weather_description, DisplaySegProperties &seg_properties, const std::string &precip_type,
+                                                                       float snow_accumulation, float ice_accumulation, int cloud_cover)
     {
         std::vector<std::unique_ptr<IWeatherEffect>> effects;
 
@@ -52,7 +46,9 @@ public:
         std::string desc_lower = weather_description;
         std::transform(desc_lower.begin(), desc_lower.end(), desc_lower.begin(),
                        [](unsigned char c)
-                       { return std::tolower(c); });
+                       {
+                           return std::tolower(c);
+                       });
 
         // 1. Check for cloud effects (background layer)
         // TODO: Enable clouds when fully implemented
@@ -62,14 +58,12 @@ public:
         // }
 
         // 2. Check for precipitation effects (foreground layer)
-        if (precip_type == "Rain" || desc_lower.find("rain") != std::string::npos ||
-            desc_lower.find("drizzle") != std::string::npos)
+        if (precip_type == "Rain" || desc_lower.find("rain") != std::string::npos || desc_lower.find("drizzle") != std::string::npos)
         {
             bool freezing = (desc_lower.find("freezing") != std::string::npos);
             effects.push_back(std::make_unique<weather::RainEffect>(seg_properties, freezing));
         }
-        else if (precip_type == "Snow" || desc_lower.find("snow") != std::string::npos ||
-                 desc_lower.find("flurries") != std::string::npos)
+        else if (precip_type == "Snow" || desc_lower.find("snow") != std::string::npos || desc_lower.find("flurries") != std::string::npos)
         {
             effects.push_back(std::make_unique<weather::SnowEffect>(seg_properties, snow_accumulation, false));
         }

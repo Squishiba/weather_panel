@@ -44,7 +44,7 @@ int main()
     gpio_set_function(pimoroni::I2C_DEFAULT_SDA, GPIO_FUNC_I2C);
     gpio_set_function(pimoroni::I2C_DEFAULT_SCL, GPIO_FUNC_I2C);
     i2c_init(i2c0, pimoroni::I2C_DEFAULT_BAUDRATE);
-    
+
     sleep_ms(100);
 
     while (1)

@@ -32,8 +32,7 @@
 // excludes the WiFi/lwIP stack (not linked yet); revisit if that changes.
 inline constexpr size_t kParticlePoolParticles = 3000;
 inline constexpr size_t kParticlePoolAssumedParticleBytes = 56; // current sizeof(Snow)/sizeof(Rain)
-inline constexpr size_t kParticlePoolBytes =
-    kParticlePoolParticles * kParticlePoolAssumedParticleBytes;
+inline constexpr size_t kParticlePoolBytes = kParticlePoolParticles * kParticlePoolAssumedParticleBytes;
 
 // Fair-share divisor: the ceiling on any single effect is kParticlePoolBytes /
 // this, so one busy segment can't starve the others. Set to the number of
@@ -50,7 +49,10 @@ inline constexpr size_t kParticlePoolFairShareSegments = 3;
 class ParticleArena
 {
 public:
-    ParticleArena() { blocks_.push_back(Block{0, kParticlePoolBytes, true}); }
+    ParticleArena()
+    {
+        blocks_.push_back(Block{0, kParticlePoolBytes, true});
+    }
 
     /**
      * @brief Carve a contiguous block of at least @p bytes from the pool.
@@ -60,14 +62,12 @@ public:
     void *allocate(size_t bytes)
     {
         bytes = align_up(bytes);
-        if (bytes == 0)
-            return nullptr;
+        if (bytes == 0) return nullptr;
 
         for (size_t i = 0; i < blocks_.size(); ++i)
         {
             Block &b = blocks_[i];
-            if (!b.free || b.size < bytes)
-                continue;
+            if (!b.free || b.size < bytes) continue;
 
             b.free = false;
             const size_t leftover = b.size - bytes;
@@ -86,8 +86,7 @@ public:
     /// Return a block previously handed out by allocate(). nullptr is ignored.
     void deallocate(void *ptr)
     {
-        if (ptr == nullptr)
-            return;
+        if (ptr == nullptr) return;
 
         const size_t offset = static_cast<size_t>(static_cast<std::byte *>(ptr) - buffer_);
         for (size_t i = 0; i < blocks_.size(); ++i)
@@ -107,8 +106,7 @@ public:
     {
         size_t best = 0;
         for (const Block &b : blocks_)
-            if (b.free && b.size > best)
-                best = b.size;
+            if (b.free && b.size > best) best = b.size;
         return best;
     }
 
@@ -117,8 +115,7 @@ public:
     {
         size_t total = 0;
         for (const Block &b : blocks_)
-            if (b.free)
-                total += b.size;
+            if (b.free) total += b.size;
         return total;
     }
 
@@ -133,7 +130,10 @@ private:
         bool free;
     };
 
-    static size_t align_up(size_t n) { return (n + (kAlign - 1)) & ~(kAlign - 1); }
+    static size_t align_up(size_t n)
+    {
+        return (n + (kAlign - 1)) & ~(kAlign - 1);
+    }
 
     // Merge adjacent free blocks. The list is kept in offset order and gapless,
     // so neighbours in the list are physically adjacent in the buffer.

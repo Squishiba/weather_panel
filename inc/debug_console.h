@@ -43,37 +43,35 @@ namespace weather
          * - freezing_rain, ice_pellets
          * - thunderstorm
          */
-        static std::vector<std::map<std::string, std::string>> generate(
-            const std::string &weather_type, int num_days = 3)
+        static std::vector<std::map<std::string, std::string>> generate(const std::string &weather_type, int num_days = 3)
         {
             std::vector<std::map<std::string, std::string>> intervals;
 
             // Map simple names to weather codes
-            static const std::map<std::string, int> weather_codes {
-                {"clear", 10000},
-                {"sunny", 10000},
-                {"mostly_clear", 11000},
-                {"partly_cloudy", 11010},
-                {"mostly_cloudy", 11020},
-                {"cloudy", 10010},
-                {"fog", 20000},
-                {"light_fog", 21000},
-                {"drizzle", 40000},
-                {"light_rain", 42000},
-                {"rain", 40010},
-                {"heavy_rain", 42010},
-                {"flurries", 50010},
-                {"light_snow", 51000},
-                {"snow", 50000},
-                {"heavy_snow", 51010},
-                {"freezing_drizzle", 60000},
-                {"light_freezing_rain", 62000},
-                {"freezing_rain", 60010},
-                {"heavy_freezing_rain", 62010},
-                {"light_ice_pellets", 71020},
-                {"ice_pellets", 70000},
-                {"heavy_ice_pellets", 71010},
-                {"thunderstorm", 80000}};
+            static const std::map<std::string, int> weather_codes{{"clear", 10000},
+                                                                  {"sunny", 10000},
+                                                                  {"mostly_clear", 11000},
+                                                                  {"partly_cloudy", 11010},
+                                                                  {"mostly_cloudy", 11020},
+                                                                  {"cloudy", 10010},
+                                                                  {"fog", 20000},
+                                                                  {"light_fog", 21000},
+                                                                  {"drizzle", 40000},
+                                                                  {"light_rain", 42000},
+                                                                  {"rain", 40010},
+                                                                  {"heavy_rain", 42010},
+                                                                  {"flurries", 50010},
+                                                                  {"light_snow", 51000},
+                                                                  {"snow", 50000},
+                                                                  {"heavy_snow", 51010},
+                                                                  {"freezing_drizzle", 60000},
+                                                                  {"light_freezing_rain", 62000},
+                                                                  {"freezing_rain", 60010},
+                                                                  {"heavy_freezing_rain", 62010},
+                                                                  {"light_ice_pellets", 71020},
+                                                                  {"ice_pellets", 70000},
+                                                                  {"heavy_ice_pellets", 71010},
+                                                                  {"thunderstorm", 80000}};
 
             // Get weather code or default to clear
             int code = 10000;
@@ -92,43 +90,37 @@ namespace weather
             std::string type_lower = weather_type;
             std::transform(type_lower.begin(), type_lower.end(), type_lower.begin(),
                            [](unsigned char c)
-                           { return std::tolower(c); });
+                           {
+                               return std::tolower(c);
+                           });
 
-            if (type_lower.find("rain") != std::string::npos ||
-                type_lower.find("drizzle") != std::string::npos)
+            if (type_lower.find("rain") != std::string::npos || type_lower.find("drizzle") != std::string::npos)
             {
                 if (type_lower.find("freezing") != std::string::npos)
                 {
                     precip_type = "3"; // Freezing Rain
-                    precip_intensity = type_lower.find("light") != std::string::npos ? 0.5f : type_lower.find("heavy") != std::string::npos ? 2.0f
-                                                                                                                                            : 1.0f;
+                    precip_intensity = type_lower.find("light") != std::string::npos ? 0.5f : type_lower.find("heavy") != std::string::npos ? 2.0f : 1.0f;
                 }
                 else
                 {
                     precip_type = "1"; // Rain
-                    precip_intensity = type_lower.find("light") != std::string::npos ||
-                                               type_lower.find("drizzle") != std::string::npos
-                                           ? 0.3f
-                                       : type_lower.find("heavy") != std::string::npos ? 3.0f
-                                                                                       : 1.5f;
+                    precip_intensity = type_lower.find("light") != std::string::npos || type_lower.find("drizzle") != std::string::npos ? 0.3f
+                                       : type_lower.find("heavy") != std::string::npos                                                  ? 3.0f
+                                                                                                                                        : 1.5f;
                 }
             }
-            else if (type_lower.find("snow") != std::string::npos ||
-                     type_lower.find("flurries") != std::string::npos)
+            else if (type_lower.find("snow") != std::string::npos || type_lower.find("flurries") != std::string::npos)
             {
                 precip_type = "2"; // Snow
-                precip_intensity = type_lower.find("light") != std::string::npos ||
-                                           type_lower.find("flurries") != std::string::npos
-                                       ? 0.2f
-                                   : type_lower.find("heavy") != std::string::npos ? 2.5f
-                                                                                   : 1.0f;
+                precip_intensity = type_lower.find("light") != std::string::npos || type_lower.find("flurries") != std::string::npos ? 0.2f
+                                   : type_lower.find("heavy") != std::string::npos                                                   ? 2.5f
+                                                                                                                                     : 1.0f;
                 snow_accumulation = 2.5f * precip_intensity;
             }
             else if (type_lower.find("ice") != std::string::npos)
             {
                 precip_type = "4"; // Ice Pellets
-                precip_intensity = type_lower.find("light") != std::string::npos ? 0.3f : type_lower.find("heavy") != std::string::npos ? 2.0f
-                                                                                                                                        : 1.0f;
+                precip_intensity = type_lower.find("light") != std::string::npos ? 0.3f : type_lower.find("heavy") != std::string::npos ? 2.0f : 1.0f;
                 ice_accumulation = 1.0f * precip_intensity;
             }
 
@@ -177,12 +169,30 @@ namespace weather
          */
         static std::vector<std::string> get_valid_types()
         {
-            return {
-                "clear", "sunny", "mostly_clear", "partly_cloudy", "mostly_cloudy", "cloudy",
-                "fog", "light_fog", "drizzle", "light_rain", "rain", "heavy_rain",
-                "flurries", "light_snow", "snow", "heavy_snow",
-                "freezing_drizzle", "light_freezing_rain", "freezing_rain", "heavy_freezing_rain",
-                "light_ice_pellets", "ice_pellets", "heavy_ice_pellets", "thunderstorm"};
+            return {"clear",
+                    "sunny",
+                    "mostly_clear",
+                    "partly_cloudy",
+                    "mostly_cloudy",
+                    "cloudy",
+                    "fog",
+                    "light_fog",
+                    "drizzle",
+                    "light_rain",
+                    "rain",
+                    "heavy_rain",
+                    "flurries",
+                    "light_snow",
+                    "snow",
+                    "heavy_snow",
+                    "freezing_drizzle",
+                    "light_freezing_rain",
+                    "freezing_rain",
+                    "heavy_freezing_rain",
+                    "light_ice_pellets",
+                    "ice_pellets",
+                    "heavy_ice_pellets",
+                    "thunderstorm"};
         }
     };
 
@@ -191,20 +201,19 @@ namespace weather
      * @brief Interactive debug console for testing weather effects
      */
     class DebugConsole
-        {
+    {
 
 
     private:
-
         struct ModCommands
-            {
-            std::set<std::string> grav_mods_ {"set_gravity_magnitude" ,"set_grav" , "gravity"};
-            std::set<std::string> fps_mods_ = {"set_fps" ,"fps" , "fps_set"};
-            std::set<std::string> fps_unlocks_ = {"unlock", "unlock_fps" , "fps_unlock"};
+        {
+            std::set<std::string> grav_mods_{"set_gravity_magnitude", "set_grav", "gravity"};
+            std::set<std::string> fps_mods_ = {"set_fps", "fps", "fps_set"};
+            std::set<std::string> fps_unlocks_ = {"unlock", "unlock_fps", "fps_unlock"};
             std::set<std::string> geometry_mods_ = {"get_geometry", "get_spawns", "geometry"};
             std::set<std::string> parallel_mods_ = {"cores", "parallel", "core1"};
             std::set<std::string> wind_mods_ = {"wind", "winds", "toggle_wind"};
-            };
+        };
 
         WeatherDisplayHandler &weather_handler_;
         std::string current_weather_ = "";
@@ -213,7 +222,7 @@ namespace weather
 
         const ModCommands mod_commands_;
 
-        static float read_target(const std::string& target_name)
+        static float read_target(const std::string &target_name)
         {
             char input[64];
             printf("Input new %s: \n", target_name.c_str());
@@ -232,7 +241,7 @@ namespace weather
         }
 
         void update_fps_target() const
-            {
+        {
             weather_handler_.set_new_fps_target(read_target("FPS Target"));
         }
 
@@ -248,9 +257,9 @@ namespace weather
         }
 
         void get_geometries() const
-            {
+        {
             weather_handler_.print_segment_geometries();
-            }
+        }
 
         /**
          * @brief Toggle the two-core physics split (parallel_executor) on/off.
@@ -263,11 +272,11 @@ namespace weather
          * disabled (dozing in WFE), so re-enabling is instant.
          */
         static void toggle_parallel()
-            {
+        {
             const bool now = !parallel::enabled();
             parallel::set_enabled(now);
             printf("Parallel physics on core 1: %s\n", now ? "ENABLED" : "DISABLED");
-            }
+        }
 
         /**
          * @brief Toggle the self-spawning ambient wind features (gust fronts).
@@ -278,25 +287,25 @@ namespace weather
          * compare against the [CSV] numbers with winds on. No reflash needed.
          */
         static void toggle_winds()
-            {
+        {
             g_ambient_winds_enabled = !g_ambient_winds_enabled;
-            printf("Ambient winds (gust fronts): %s (takes effect on next weather start)\n",
-                   g_ambient_winds_enabled ? "ENABLED" : "DISABLED");
-            }
+            printf("Ambient winds (gust fronts): %s (takes effect on next weather start)\n", g_ambient_winds_enabled ? "ENABLED" : "DISABLED");
+        }
 
         void print_modifiers()
-            {
+        {
             printf("\n Modifier Commands ");
             std::cout << "hello!" << std::endl;
 
-            pfr::for_each_field(mod_commands_, [&](auto& field)
-            {
-                for (auto& itr : field)
-                    {
-                    std::cout << "Commands Accepted: " << itr << std::endl;
-                    }
-            });
-            }
+            pfr::for_each_field(mod_commands_,
+                                [&](auto &field)
+                                {
+                                    for (auto &itr : field)
+                                    {
+                                        std::cout << "Commands Accepted: " << itr << std::endl;
+                                    }
+                                });
+        }
 
         static void print_help()
         {
@@ -406,7 +415,9 @@ namespace weather
             std::string line(input);
             std::transform(line.begin(), line.end(), line.begin(),
                            [](unsigned char c)
-                           { return std::tolower(c); });
+                           {
+                               return std::tolower(c);
+                           });
 
             // Trim whitespace
             line.erase(0, line.find_first_not_of(" \t\n\r"));
@@ -417,8 +428,7 @@ namespace weather
         }
 
     public:
-        DebugConsole(WeatherDisplayHandler &weather_handler)
-            : weather_handler_(weather_handler) {}
+        DebugConsole(WeatherDisplayHandler &weather_handler) : weather_handler_(weather_handler) {}
 
         void run()
         {
@@ -514,14 +524,14 @@ namespace weather
                     }
 
                     else if (line == "modifiers")
-                        {
+                    {
                         print_modifiers();
-                        }
+                    }
 
                     else if (mod_commands_.grav_mods_.contains(line.data()))
-                        {
+                    {
                         update_gravity();
-                        }
+                    }
 
                     else if (mod_commands_.fps_mods_.contains(line.data()))
                     {
@@ -535,19 +545,19 @@ namespace weather
                     }
 
                     else if (mod_commands_.geometry_mods_.contains(line.data()))
-                        {
+                    {
                         get_geometries();
-                        }
+                    }
 
                     else if (mod_commands_.parallel_mods_.contains(line.data()))
-                        {
+                    {
                         toggle_parallel();
-                        }
+                    }
 
                     else if (mod_commands_.wind_mods_.contains(line.data()))
-                        {
+                    {
                         toggle_winds();
-                        }
+                    }
 
                     else if (line == "list")
                     {

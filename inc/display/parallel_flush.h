@@ -38,14 +38,14 @@ namespace weather
     /// One core's share of the flush: convert canvas rows [y0, y1).
     struct FlushCtx
     {
-        pimoroni::Pixel *dst;  ///< HUB75 back buffer (gamma'd 10:10:10 pixels)
-        const uint32_t *fb;    ///< canvas framebuffer, 0xDDRRGGBB per pixel
-        int y0;                ///< first canvas row (inclusive)
-        int y1;                ///< last canvas row (exclusive)
-        int canvas_w;          ///< canvas width in pixels (= panel_w / 2)
-        int panel_w;           ///< HUB75 driver width  (e.g. 256)
-        int panel_h;           ///< HUB75 driver height (e.g. 64)
-        uint r_shift;          ///< colour-order shifts, copied from the driver
+        pimoroni::Pixel *dst; ///< HUB75 back buffer (gamma'd 10:10:10 pixels)
+        const uint32_t *fb;   ///< canvas framebuffer, 0xDDRRGGBB per pixel
+        int y0;               ///< first canvas row (inclusive)
+        int y1;               ///< last canvas row (exclusive)
+        int canvas_w;         ///< canvas width in pixels (= panel_w / 2)
+        int panel_w;          ///< HUB75 driver width  (e.g. 256)
+        int panel_h;          ///< HUB75 driver height (e.g. 64)
+        uint r_shift;         ///< colour-order shifts, copied from the driver
         uint g_shift;
         uint b_shift;
     };
@@ -96,10 +96,7 @@ namespace weather
                 const uint32_t g = (px >> 8) & 0xFFu;
                 const uint32_t r = (px >> 16) & 0xFFu;
 
-                c->dst[offsety + (x + basex) * 2] = pimoroni::Pixel(
-                    (pimoroni::GAMMA_10BIT[b] << c->b_shift) |
-                    (pimoroni::GAMMA_10BIT[g] << c->g_shift) |
-                    (pimoroni::GAMMA_10BIT[r] << c->r_shift));
+                c->dst[offsety + (x + basex) * 2] = pimoroni::Pixel((pimoroni::GAMMA_10BIT[b] << c->b_shift) | (pimoroni::GAMMA_10BIT[g] << c->g_shift) | (pimoroni::GAMMA_10BIT[r] << c->r_shift));
             }
         }
     }
@@ -117,21 +114,17 @@ namespace weather
         const int cw = graphics.bounds.w;
         const int ch = graphics.bounds.h;
 
-        if (graphics.pen_type != pimoroni::PicoGraphics::PEN_RGB888 ||
-            cw != static_cast<int>(hub.width / 2) ||
-            ch != static_cast<int>(hub.height * 2))
+        if (graphics.pen_type != pimoroni::PicoGraphics::PEN_RGB888 || cw != static_cast<int>(hub.width / 2) || ch != static_cast<int>(hub.height * 2))
         {
             hub.update(&graphics); // unknown layout: let the driver handle it
             return;
         }
 
         const int mid = ch / 2;
-        FlushCtx upper{hub.back_buffer, static_cast<const uint32_t *>(graphics.frame_buffer),
-                       mid, ch, cw, static_cast<int>(hub.width), static_cast<int>(hub.height),
-                       hub.r_shift, hub.g_shift, hub.b_shift};
-        FlushCtx lower{hub.back_buffer, static_cast<const uint32_t *>(graphics.frame_buffer),
-                       0, mid, cw, static_cast<int>(hub.width), static_cast<int>(hub.height),
-                       hub.r_shift, hub.g_shift, hub.b_shift};
+        FlushCtx upper{hub.back_buffer, static_cast<const uint32_t *>(graphics.frame_buffer), mid, ch, cw, static_cast<int>(hub.width), static_cast<int>(hub.height), hub.r_shift, hub.g_shift,
+                       hub.b_shift};
+        FlushCtx lower{hub.back_buffer, static_cast<const uint32_t *>(graphics.frame_buffer), 0, mid, cw, static_cast<int>(hub.width), static_cast<int>(hub.height), hub.r_shift, hub.g_shift,
+                       hub.b_shift};
 
         // core 0: upper rows, core 1: lower rows. Items = pixels, so tiny
         // panels would just run inline (same threshold as the physics split).

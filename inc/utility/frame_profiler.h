@@ -60,12 +60,12 @@ public:
     /// Phases of one frame. Keep in sync with kPhaseNames and the CSV row below.
     enum Phase : uint8_t
     {
-        CLEAR = 0,  ///< clear framebuffer + draw segment dividers
-        LUX,        ///< ambient-light sensor I2C read
-        UPDATE,     ///< particle physics: force update + spawn edge + effect update
-        DRAW,       ///< rasterise: base display + effect draw
-        FLUSH,      ///< push framebuffer to the HUB75 driver (i75.update)
-        GOVERN,     ///< FPS-cap sleep (idle; excluded from "busy")
+        CLEAR = 0, ///< clear framebuffer + draw segment dividers
+        LUX,       ///< ambient-light sensor I2C read
+        UPDATE,    ///< particle physics: force update + spawn edge + effect update
+        DRAW,      ///< rasterise: base display + effect draw
+        FLUSH,     ///< push framebuffer to the HUB75 driver (i75.update)
+        GOVERN,    ///< FPS-cap sleep (idle; excluded from "busy")
         PHASE_COUNT
     };
 
@@ -76,15 +76,17 @@ public:
     }
 
     /// Start timing @p p. Pairs with end(p); do not nest the same phase.
-    void begin(Phase p) { start_[p] = now_us(); }
+    void begin(Phase p)
+    {
+        start_[p] = now_us();
+    }
 
     /// Stop timing @p p and fold the elapsed time into this window's totals.
     void end(Phase p)
     {
         const uint32_t dt = now_us() - start_[p];
         accum_[p] += dt;
-        if (dt > max_[p])
-            max_[p] = dt;
+        if (dt > max_[p]) max_[p] = dt;
     }
 
     /**
@@ -98,8 +100,7 @@ public:
         particle_accum_ += particle_count;
 
         const uint32_t now = now_us();
-        if (now - window_start_ < kReportPeriodUs)
-            return;
+        if (now - window_start_ < kReportPeriodUs) return;
 
         report(now - window_start_);
         reset();
@@ -109,14 +110,19 @@ public:
 private:
     static constexpr uint32_t kReportPeriodUs = 1'000'000; // summarise ~once per second
 
-    FrameProfiler() { window_start_ = now_us(); }
+    FrameProfiler()
+    {
+        window_start_ = now_us();
+    }
 
-    static uint32_t now_us() { return time_us_32(); }
+    static uint32_t now_us()
+    {
+        return time_us_32();
+    }
 
     static const char *name(Phase p)
     {
-        static const char *const kPhaseNames[PHASE_COUNT] =
-            {"clear", "lux", "update", "draw", "flush", "govern"};
+        static const char *const kPhaseNames[PHASE_COUNT] = {"clear", "lux", "update", "draw", "flush", "govern"};
         return kPhaseNames[p];
     }
 
@@ -130,31 +136,18 @@ private:
             busy += accum_[p];
         const uint32_t busy_avg = static_cast<uint32_t>(busy / frames);
 
-        printf("[PROF] frames=%lu fps=%.1f particles=%lu\n",
-               static_cast<unsigned long>(frames_), static_cast<double>(fps),
-               static_cast<unsigned long>(particle_accum_ / frames));
+        printf("[PROF] frames=%lu fps=%.1f particles=%lu\n", static_cast<unsigned long>(frames_), static_cast<double>(fps), static_cast<unsigned long>(particle_accum_ / frames));
 
         for (uint8_t p = 0; p < PHASE_COUNT; ++p)
-            printf("  %-7s avg %7lu us   max %6lu us\n",
-                   name(static_cast<Phase>(p)),
-                   static_cast<unsigned long>(accum_[p] / frames),
-                   static_cast<unsigned long>(max_[p]));
+            printf("  %-7s avg %7lu us   max %6lu us\n", name(static_cast<Phase>(p)), static_cast<unsigned long>(accum_[p] / frames), static_cast<unsigned long>(max_[p]));
 
-        printf("  %-7s avg %7lu us   => single-core ceiling %.1f fps\n",
-               "busy", static_cast<unsigned long>(busy_avg),
-               busy_avg ? 1'000'000.0 / static_cast<double>(busy_avg) : 0.0);
+        printf("  %-7s avg %7lu us   => single-core ceiling %.1f fps\n", "busy", static_cast<unsigned long>(busy_avg), busy_avg ? 1'000'000.0 / static_cast<double>(busy_avg) : 0.0);
 
         // Machine-readable mirror. Grep '^\[CSV\]' from the serial log; columns:
         // frames,fps,particles,clear,lux,update,draw,flush,govern,busy  (us, window-average)
-        printf("[CSV],%lu,%.1f,%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu\n",
-               static_cast<unsigned long>(frames_), static_cast<double>(fps),
-               static_cast<unsigned long>(particle_accum_ / frames),
-               static_cast<unsigned long>(accum_[CLEAR] / frames),
-               static_cast<unsigned long>(accum_[LUX] / frames),
-               static_cast<unsigned long>(accum_[UPDATE] / frames),
-               static_cast<unsigned long>(accum_[DRAW] / frames),
-               static_cast<unsigned long>(accum_[FLUSH] / frames),
-               static_cast<unsigned long>(accum_[GOVERN] / frames),
+        printf("[CSV],%lu,%.1f,%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu\n", static_cast<unsigned long>(frames_), static_cast<double>(fps), static_cast<unsigned long>(particle_accum_ / frames),
+               static_cast<unsigned long>(accum_[CLEAR] / frames), static_cast<unsigned long>(accum_[LUX] / frames), static_cast<unsigned long>(accum_[UPDATE] / frames),
+               static_cast<unsigned long>(accum_[DRAW] / frames), static_cast<unsigned long>(accum_[FLUSH] / frames), static_cast<unsigned long>(accum_[GOVERN] / frames),
                static_cast<unsigned long>(busy_avg));
         printf("\n");
     }
@@ -182,8 +175,14 @@ private:
 class ProfScope
 {
 public:
-    explicit ProfScope(FrameProfiler::Phase p) : phase_(p) { FrameProfiler::instance().begin(p); }
-    ~ProfScope() { FrameProfiler::instance().end(phase_); }
+    explicit ProfScope(FrameProfiler::Phase p) : phase_(p)
+    {
+        FrameProfiler::instance().begin(p);
+    }
+    ~ProfScope()
+    {
+        FrameProfiler::instance().end(phase_);
+    }
     ProfScope(const ProfScope &) = delete;
     ProfScope &operator=(const ProfScope &) = delete;
 

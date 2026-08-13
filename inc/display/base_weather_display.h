@@ -28,14 +28,10 @@ private:
     int cloud_cover_;
 
 public:
-    BaseWeatherDisplay(DisplaySegProperties &segment)
-        : seg_properties_(segment), temperature_(0), wind_speed_(0), wind_direction_(0), cloud_cover_(0)
-    {
-    }
+    BaseWeatherDisplay(DisplaySegProperties &segment) : seg_properties_(segment), temperature_(0), wind_speed_(0), wind_direction_(0), cloud_cover_(0) {}
 
-    void update_data(const float temperature, const float wind_speed, const float wind_direction,
-                     const std::string &sunrise_time, const std::string &sunset_time,
-                     const std::string &day_name, const int cloud_cover)
+    void update_data(const float temperature, const float wind_speed, const float wind_direction, const std::string &sunrise_time, const std::string &sunset_time, const std::string &day_name,
+                     const int cloud_cover)
     {
         temperature_ = temperature;
         wind_speed_ = wind_speed;
@@ -55,7 +51,8 @@ public:
     }
 
 private:
-    void draw_sky_gradient(auto &graphics) const {
+    void draw_sky_gradient(auto &graphics) const
+    {
         // TODO: Implement sky gradient based on time of day
         // For now, draw a simple blue sky
         pimoroni::Pen sky_pen = graphics.create_pen(100, 150, 255);

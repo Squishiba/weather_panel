@@ -55,20 +55,20 @@
 // are fine — the loops re-test). On the desktop, C++20 atomic wait/notify parks
 // the thread in the OS instead of burning a core.
 #if defined(__has_include)
-#  if __has_include("hardware/sync.h")
-#    include "hardware/sync.h"
-#    define WEATHER_PARALLEL_ON_RP2 1
-#  endif
+#if __has_include("hardware/sync.h")
+#include "hardware/sync.h"
+#define WEATHER_PARALLEL_ON_RP2 1
+#endif
 #endif
 
 #ifdef WEATHER_PARALLEL_ON_RP2
 // Doze until any event; the caller's loop re-checks the actual condition.
-#  define WEATHER_PARALLEL_WAIT(var, old) __wfe()
-#  define WEATHER_PARALLEL_WAKE(var) __sev()
+#define WEATHER_PARALLEL_WAIT(var, old) __wfe()
+#define WEATHER_PARALLEL_WAKE(var) __sev()
 #else
 // Block while (var == old); wakes on the matching notify (or spuriously).
-#  define WEATHER_PARALLEL_WAIT(var, old) (var).wait(old)
-#  define WEATHER_PARALLEL_WAKE(var) (var).notify_one()
+#define WEATHER_PARALLEL_WAIT(var, old) (var).wait(old)
+#define WEATHER_PARALLEL_WAKE(var) (var).notify_one()
 #endif
 
 namespace parallel
@@ -90,8 +90,7 @@ namespace parallel
         // would deadlock across cores (no OS on the firmware side).
         inline std::atomic<uint32_t> g_go{0};
         inline std::atomic<uint32_t> g_done{0};
-        static_assert(std::atomic<uint32_t>::is_always_lock_free,
-                      "inter-core handshake requires lock-free 32-bit atomics");
+        static_assert(std::atomic<uint32_t>::is_always_lock_free, "inter-core handshake requires lock-free 32-bit atomics");
 
         // Enable THIS core's FPU (Cortex-M33 CPACR: CP10 & CP11 = full access).
         // Core 0 gets this from the runtime startup, but a freshly launched
@@ -129,8 +128,8 @@ namespace parallel
                     WEATHER_PARALLEL_WAIT(g_go, seen); // doze; loop re-checks
 
                 seen = go;
-                g_fn(g_ctx);                                     // run core 1's half
-                g_done.store(seen, std::memory_order_release);   // publish results + done
+                g_fn(g_ctx);                                   // run core 1's half
+                g_done.store(seen, std::memory_order_release); // publish results + done
                 WEATHER_PARALLEL_WAKE(g_done);
             }
         }
@@ -155,8 +154,14 @@ namespace parallel
 
     /// Turn use of core 1 on/off at runtime. When off, run() does both halves
     /// inline on the calling core — identical result, one code path.
-    inline void set_enabled(bool on) { detail::g_enabled = on; }
-    inline bool enabled() { return detail::g_enabled; }
+    inline void set_enabled(bool on)
+    {
+        detail::g_enabled = on;
+    }
+    inline bool enabled()
+    {
+        return detail::g_enabled;
+    }
 
     /// Below this many items the fork/join sync costs more than it saves.
     inline constexpr size_t kMinItemsForSplit = 64;

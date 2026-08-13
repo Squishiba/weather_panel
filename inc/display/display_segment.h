@@ -27,7 +27,6 @@ class DisplaySegment
     friend class WeatherDisplayHandler;
 
 private:
-
     DisplaySegProperties seg_properties_;
     std::string weather_state_;
     std::map<std::string, std::string> weather_info_;
@@ -48,10 +47,7 @@ public:
      * @param bounds The drawing box for this segment.
      * @param segment_num The segment index (0-based).
      */
-    DisplaySegment(const RectMod &bounds, const uint8_t segment_num)
-        : seg_properties_(bounds, segment_num), base_display_(seg_properties_)
-    {
-    }
+    DisplaySegment(const RectMod &bounds, const uint8_t segment_num) : seg_properties_(bounds, segment_num), base_display_(seg_properties_) {}
 
     // Pinned type: holds a self-referential DisplaySegProperties by value and a
     // BaseWeatherDisplay that references it. Never copy or move a live segment —
@@ -84,8 +80,7 @@ public:
         const std::string day_name = get_string_value("day", "");
         const int cloud_cover = get_int_value("cloudCover", 0);
 
-        base_display_.update_data(temperature, wind_speed, wind_direction,
-                                  sunrise_time, sunset_time, day_name, cloud_cover);
+        base_display_.update_data(temperature, wind_speed, wind_direction, sunrise_time, sunset_time, day_name, cloud_cover);
 
         // Clean up old weather effects
         for (const auto &effect : weather_effects_)
@@ -113,10 +108,7 @@ public:
 
         seg_properties_.set_intensity(precip_intensity);
 
-        weather_effects_ = WeatherEffectFactory::create_effects(
-            weather_code, weather_state_, seg_properties_,
-            precip_type, snow_accumulation,
-            ice_accumulation, cloud_cover);
+        weather_effects_ = WeatherEffectFactory::create_effects(weather_code, weather_state_, seg_properties_, precip_type, snow_accumulation, ice_accumulation, cloud_cover);
     }
 
     /**
@@ -163,18 +155,29 @@ public:
         PROF_END(DRAW);
     }
 
-    [[nodiscard]] const std::string &weather_state() const { return weather_state_; }
-    [[nodiscard]] uint16_t get_total_particle_count() const { return particle_count_; }
-    [[nodiscard]] RectMod seg_bounds() const { return seg_properties_.get_seg_bounds(); }
-    DisplaySegProperties &get_segment_properties() { return seg_properties_; }
+    [[nodiscard]] const std::string &weather_state() const
+    {
+        return weather_state_;
+    }
+    [[nodiscard]] uint16_t get_total_particle_count() const
+    {
+        return particle_count_;
+    }
+    [[nodiscard]] RectMod seg_bounds() const
+    {
+        return seg_properties_.get_seg_bounds();
+    }
+    DisplaySegProperties &get_segment_properties()
+    {
+        return seg_properties_;
+    }
 
 private:
     // Helper functions to extract typed values from weather_info_
     // Simple string to float conversion without exceptions
     static float safe_stof(const std::string &str, float default_val)
     {
-        if (str.empty())
-            return default_val;
+        if (str.empty()) return default_val;
 
         char *end;
         float result = strtof(str.c_str(), &end);
@@ -190,8 +193,7 @@ private:
     // Simple string to int conversion without exceptions
     static int safe_stoi(const std::string &str, int default_val)
     {
-        if (str.empty())
-            return default_val;
+        if (str.empty()) return default_val;
 
         char *end;
         long result = strtol(str.c_str(), &end, 10);

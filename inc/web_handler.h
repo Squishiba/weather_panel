@@ -80,8 +80,7 @@ namespace weather
 
             // Attempt connection with timeout
             int max_wait = 10; // 10 second timeout
-            if (cyw43_arch_wifi_connect_timeout_ms(ssid_.c_str(), password_.c_str(),
-                                                   CYW43_AUTH_WPA2_AES_PSK, 10000))
+            if (cyw43_arch_wifi_connect_timeout_ms(ssid_.c_str(), password_.c_str(), CYW43_AUTH_WPA2_AES_PSK, 10000))
             {
                 printf("Failed to connect to WiFi\n");
                 connected_ = false;
@@ -160,9 +159,18 @@ namespace weather
         }
 
         // Getters
-        float latitude() const { return latitude_; }
-        float longitude() const { return longitude_; }
-        bool is_connected() const { return connected_; }
+        float latitude() const
+        {
+            return latitude_;
+        }
+        float longitude() const
+        {
+            return longitude_;
+        }
+        bool is_connected() const
+        {
+            return connected_;
+        }
     };
 
 } // namespace weather

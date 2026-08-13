@@ -144,22 +144,25 @@ public:
      *  new addition!
      * @return AP3216LuxRange&
      */
-    AP3216LuxRange &getLuxRange() { return luxRange; }
+    AP3216LuxRange &getLuxRange()
+    {
+        return luxRange;
+    }
     float getLuxMax(const AP3216LuxRange range)
     {
         switch (range)
         {
-        case RANGE_20661:
-            return 20661.0f;
+            case RANGE_20661:
+                return 20661.0f;
 
-        case RANGE_5162:
-            return 5162.0f;
+            case RANGE_5162:
+                return 5162.0f;
 
-        case RANGE_1291:
-            return 1291.0f;
+            case RANGE_1291:
+                return 1291.0f;
 
-        case RANGE_323:
-            return 323.0f;
+            case RANGE_323:
+                return 323.0f;
         }
     }
 

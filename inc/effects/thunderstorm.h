@@ -27,10 +27,7 @@ namespace weather
         float intensity_;
 
     public:
-        ThunderstormEffect(DisplaySegProperties &seg_properties, float intensity)
-            : seg_properties_(seg_properties), intensity_(intensity)
-        {
-        }
+        ThunderstormEffect(DisplaySegProperties &seg_properties, float intensity) : seg_properties_(seg_properties), intensity_(intensity) {}
 
         void update() override
         {

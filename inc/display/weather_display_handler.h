@@ -35,20 +35,20 @@ protected:
 
     uint8_t global_brightness_ = 3;
 
-    AP3216_WE lux_meter_;                         // The lux meter add-on, detects brightness of room to dim or brighten display.
-    uint32_t prev_time_ = 0;                      // Previous time clocked in us.
-    float fps_target_;                            // FPS target.
-    float fps_period_;                            // FPS period in s.
-    uint32_t fps_period_us_;                      // FPS period in us.
-    uint16_t width_;                              // Width of display.
-    uint16_t height_;                             // Height of display.
-    uint16_t total_particle_count_ = 0;           // Total particle count being drawn onscreen.
-    uint8_t num_days_;                            // Number of days to generate.
+    AP3216_WE lux_meter_;               // The lux meter add-on, detects brightness of room to dim or brighten display.
+    uint32_t prev_time_ = 0;            // Previous time clocked in us.
+    float fps_target_;                  // FPS target.
+    float fps_period_;                  // FPS period in s.
+    uint32_t fps_period_us_;            // FPS period in us.
+    uint16_t width_;                    // Width of display.
+    uint16_t height_;                   // Height of display.
+    uint16_t total_particle_count_ = 0; // Total particle count being drawn onscreen.
+    uint8_t num_days_;                  // Number of days to generate.
     // Segments are stored behind unique_ptr because DisplaySegment is a pinned,
     // self-referential type (see display_segment.h): it must never be relocated,
     // so the vector holds stable pointers rather than the objects by value.
     std::vector<std::unique_ptr<DisplaySegment>> segment_display_; // Stores each display segment.
-    std::vector<uint16_t> frame_points_;          // X coordinates where frame dividers are drawn
+    std::vector<uint16_t> frame_points_;                           // X coordinates where frame dividers are drawn
     friend class DebugConsole;
 
 public:
@@ -122,10 +122,10 @@ public:
                 frame_points_.push_back(x_end + 1);
             }
 
-            RectMod seg_frame(x_start, 0, segment_widths[i], height_);  // Create the rectangle that bounds this segment.
+            RectMod seg_frame(x_start, 0, segment_widths[i], height_);     // Create the rectangle that bounds this segment.
             auto segment = std::make_unique<DisplaySegment>(seg_frame, i); // Construct the pinned segment in place on the heap.
-            segment->get_segment_properties().set_dt(fps_period_);      // Set the initial delta time.
-            segment_display_.push_back(std::move(segment));             // Store the owning pointer in the vector.
+            segment->get_segment_properties().set_dt(fps_period_);         // Set the initial delta time.
+            segment_display_.push_back(std::move(segment));                // Store the owning pointer in the vector.
             current_x += segment_widths[i] + 1;
         }
         print_segment_geometries();
