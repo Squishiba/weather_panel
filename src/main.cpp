@@ -1,4 +1,4 @@
-#include "main.h"
+#include "main.hpp"
 
 // Display constants
 constexpr uint16_t kDisplay_Width = 128;

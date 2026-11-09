@@ -1,5 +1,5 @@
 # ---- credentials (NEVER commit) ----
-inc/secrets.h
+inc/secrets.hpp
 
 # ---- vendored SDKs ----
 pico-sdk/

@@ -5,6 +5,15 @@
 		}
 	],
 	"settings": {
+		// MUST be duplicated here, not only in .vscode/settings.json. When this
+		// .code-workspace file is what's open, its settings block wins for
+		// window-scoped settings, so the folder-level clangd.arguments is
+		// ignored -- clangd then runs without --query-driver, never learns the
+		// cross-compiler's libstdc++ paths, and every file reports
+		// "'cassert' file not found". Keep the two in sync.
+		"clangd.arguments": [
+			"--query-driver=C:/Users/Jared/.pico-sdk/toolchain/*/bin/arm-none-eabi-*"
+		],
 		"cmake.options.statusBarVisibility": "hidden",
 		"cmake.options.advanced": {
 			"build": {

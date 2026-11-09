@@ -26,7 +26,6 @@ endif()
 set(PIMORONI_PICO_PATH ${CMAKE_CURRENT_LIST_DIR}/pimoroni-pico)
 set(PICO_PLATFORM rp2350-arm-s)
 set(PICO_BOARD pico2_w)
-set(PICO_COMPILER)
 
 # Pull in Raspberry Pi Pico SDK (must be before project)
 include(pimoroni_pico_import.cmake)
@@ -119,18 +118,24 @@ target_include_directories(weather PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/inc
 )
 
-add_compile_options(-Wall
+# NOTE: these were previously set with add_compile_options(), which only affects
+# targets created AFTER the call — and add_executable(weather ...) appears ~60
+# lines earlier, so none of them ever reached the build. target_compile_options
+# is order-independent and scopes the flags to this target, which is what was
+# intended all along.
+#
+# -mfp16-format=ieee enables the IEEE half-precision (__fp16) storage type used
+# by the `half` alias in inc/physics/particle_physics.hpp to shrink the
+# per-particle Physical block. Keeping it target-scoped means it never touches
+# the SDK / CMSIS-DSP translation units.
+target_compile_options(weather PRIVATE
+    -Wall
     -Wno-format
     -Wno-unused-function
     -Wno-maybe-uninitialized
     -funroll-loops
+    -mfp16-format=ieee
 )
-
-# Enable the IEEE half-precision (__fp16) storage type for our own sources.
-# Used by the `half` alias in inc/physics/particle_physics.h to shrink the
-# per-particle Physical block. Scoped to the weather target so it never touches
-# the SDK / CMSIS-DSP translation units.
-target_compile_options(weather PRIVATE -mfp16-format=ieee)
 
 target_compile_definitions(weather PRIVATE
     ARM_MATH_CM33

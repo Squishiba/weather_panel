@@ -14,7 +14,7 @@ Modified by Jared Bin to work with the pi pico 2 without arduino.
 
 *******************************************/
 
-#include "AP3216_WE.h"
+#include "AP3216_WE.hpp"
 
 void AP3216_WE::init(i2c_inst_t *i2c)
 {
